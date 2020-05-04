@@ -104,10 +104,10 @@ print(features.shape)
 
 X_train, X_test, y_train, y_test = train_test_split(features,data['airline_sentiment'], test_size = 0.2, stratify = data['airline_sentiment'], random_state = 42)
 
-
 from sklearn import svm
 from sklearn.multiclass import OneVsRestClassifier
-clf = OneVsRestClassifier(svm.SVC(gamma=0.01, C=100., probability=True, class_weight='balanced', kernel='linear'))
+#clf = OneVsRestClassifier(svm.SVC(gamma=0.01, C=100., probability=True, class_weight='balanced', kernel='linear'))
+clf = svm.SVC(gamma=0.01, C=100., probability=True, class_weight='balanced', kernel='linear')
 clf.fit(X_train, y_train)
 
 prediction_svm = clf.predict(X_test)
@@ -115,8 +115,8 @@ print(accuracy_score(prediction_svm, y_test))
 print(confusion_matrix(prediction_svm, y_test, labels=[0, 1, 2]))
 
 from sklearn.linear_model import LogisticRegression
-# lr = OneVsRestClassifier(LogisticRegression())
-lr = LogisticRegression()
+#lr = OneVsRestClassifier(LogisticRegression())
+lr = LogisticRegression(max_iter=1000)
 lr.fit(X_train, y_train)
 
 prediction_lr = lr.predict(X_test)
@@ -124,7 +124,8 @@ print(accuracy_score(prediction_lr,y_test))
 print(confusion_matrix(prediction_lr, y_test, labels=[0, 1, 2]))
 
 from sklearn.neural_network import MLPClassifier
-mlp = OneVsRestClassifier(MLPClassifier(solver='lbfgs', alpha=1e-5, hidden_layer_sizes=(5, 2), random_state=1, max_iter=200))
+#mlp = OneVsRestClassifier(MLPClassifier(solver='lbfgs', alpha=1e-5, hidden_layer_sizes=(5, 2), random_state=1, max_iter=200))
+mlp = MLPClassifier(solver='lbfgs', alpha=1e-5, hidden_layer_sizes=(5, 2), random_state=1, max_iter=200)
 mlp.fit(X_train, y_train)
 
 prediction_mlp = mlp.predict(X_test)
@@ -138,6 +139,14 @@ bayes.fit(X_train, y_train)
 prediction_bayes = bayes.predict(X_test)
 print(accuracy_score(prediction_bayes,y_test))
 print(confusion_matrix(prediction_bayes, y_test, labels=[0, 1, 2]))
+
+from sklearn import tree
+tree = tree.DecisionTreeClassifier()
+tree.fit(X_train, y_train)
+
+prediction_tree = tree.predict(X_test)
+print(accuracy_score(prediction_tree,y_test))
+print(confusion_matrix(prediction_tree, y_test, labels=[0, 1, 2]))
 
 tweets = [
     "What a great airline, the trip was a pleasure!",
@@ -164,4 +173,7 @@ print(mlp.predict(features))
 
 print(bayes.predict_proba(features))
 print(bayes.predict(features))
+
+print(tree.predict_proba(features))
+print(tree.predict(features))
 
