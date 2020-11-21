@@ -9,6 +9,8 @@ from sklearn.feature_extraction.text import TfidfVectorizer
 from sklearn.model_selection import train_test_split
 from sklearn.metrics import accuracy_score
 from sklearn.metrics import confusion_matrix
+from collections import Counter
+from imblearn.over_sampling import SMOTE, ADASYN
 
 DECODE_MAP = {"negative": 0, "neutral": 1, "positive": 2}
 STOP_WORDS = nltk.corpus.stopwords.words('english')
@@ -90,7 +92,7 @@ positiveTweetsSample = positiveTweets.sample(2000)
 neutralTweetsSample = neutralTweets.sample(2000)
 negativeTweetsSample = negativeTweets.sample(2000)
 
-data = pd.concat([positiveTweetsSample, neutralTweetsSample, negativeTweetsSample])
+#data = pd.concat([positiveTweetsSample, neutralTweetsSample, negativeTweetsSample])
 
 print(positiveTweets['airline_sentiment'].head())
 #data = data.sample(5000)
@@ -103,6 +105,12 @@ features = tfidf.fit_transform(data['cleansedTweets'])
 print(features.shape)
 
 X_train, X_test, y_train, y_test = train_test_split(features,data['airline_sentiment'], test_size = 0.2, stratify = data['airline_sentiment'], random_state = 42)
+
+
+# Balancing training dataset with SMOTE method using oversampling
+X_train, y_train = SMOTE().fit_resample(X_train, y_train)
+print(sorted(Counter(y_train).items()))
+
 
 from sklearn import svm
 from sklearn.multiclass import OneVsRestClassifier

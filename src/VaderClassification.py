@@ -6,6 +6,11 @@ file = pd.read_csv('../Tweets.csv')
 data = pd.DataFrame(file, columns=['tweet_id', 'airline_sentiment', 'text'])
 data.set_index('tweet_id', drop=False)
 
+print(len(data[data['airline_sentiment'] == 'negative']))
+print(len(data[data['airline_sentiment'] == 'neutral']))
+print(len(data[data['airline_sentiment'] == 'positive']))
+print(len(data))
+
 analyser = SentimentIntensityAnalyzer()
 vaderSentiments = []
 data['VADERSentiment'] = 'NA'
